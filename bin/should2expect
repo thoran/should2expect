@@ -2,16 +2,16 @@
 # should2expect
 
 # 20150122
-# 0.6.0
+# 0.7.0
 
-# Changes since 0.5:
-# 1. + receive()
-# 2. ~ allow(), so as the closing parentheses are non-greedy.
-# 3. ~ allow_any_instance_of(), so as the closing parentheses are non-greedy.
+# Changes since 0.6:
+# 1. + verbs().
+# 2. + has().
 
 # Notes: 
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
 # and makes use of an existing matching which is more apropos.
+# 2. has() must be before verbs().
 
 def transforms(contents)
   eq(contents)
@@ -21,6 +21,8 @@ def transforms(contents)
   allow(contents)
   allow_any_instance_of(contents)
   receive(contents)
+  has(contents)
+  verbs(contents)
 end
 
 def eq(contents)
@@ -49,6 +51,14 @@ end
 
 def receive(contents)
   contents.gsub!(/( *)(.+)\.should_receive\((.+?)\)/, "\\1expect(\\2).to receive(\\3)")
+end
+
+def has(contents)
+  contents.gsub!(/( *)it([ \(])(['"])should have (.*?)(['"])([ \)])do/, "\\1it\\2\\3has \\4\\5\\6do")
+end
+
+def verbs(contents)
+  contents.gsub!(/( *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/, "\\1it\\2\\3\\4s \\5\\6\\7do")
 end
 
 input_filenames = (
