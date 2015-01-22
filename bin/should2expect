@@ -2,11 +2,12 @@
 # should2expect
 
 # 20150122
-# 0.5.0
+# 0.6.0
 
-# Changes since 0.4:
-# 1. + allow()
-# 2. + all_any_instance_of()
+# Changes since 0.5:
+# 1. + receive()
+# 2. ~ allow(), so as the closing parentheses are non-greedy.
+# 3. ~ allow_any_instance_of(), so as the closing parentheses are non-greedy.
 
 # Notes: 
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -19,6 +20,7 @@ def transforms(contents)
   be_nil(contents)
   allow(contents)
   allow_any_instance_of(contents)
+  receive(contents)
 end
 
 def eq(contents)
@@ -38,11 +40,15 @@ def be_nil(contents)
 end
 
 def allow(contents)
-  contents.gsub!(/( *)(.+)\.stub\((.+)\)( +)/, "\\1allow(\\2).to receive(\\3)\\4")
+  contents.gsub!(/( *)(.+)\.stub\((.+?)\)/, "\\1allow(\\2).to receive(\\3)")
 end
 
 def allow_any_instance_of(contents)
-  contents.gsub!(/( *)(.+)\.any_instance_of\.stub\((.+)\)( +)/, "\\1allow_any_instance_of(\\2).to receive(\\3)\\4")
+  contents.gsub!(/( *)(.+)\.any_instance_of\.stub\((.+?)\)/, "\\1allow_any_instance_of(\\2).to receive(\\3)")
+end
+
+def receive(contents)
+  contents.gsub!(/( *)(.+)\.should_receive\((.+?)\)/, "\\1expect(\\2).to receive(\\3)")
 end
 
 input_filenames = (
