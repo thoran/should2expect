@@ -2,16 +2,19 @@
 # should2expect
 
 # 20150122
-# 0.7.0
+# 0.7.1
 
 # Changes since 0.6:
 # 1. + verbs().
 # 2. + has().
+# 0/1
+# 2. + does_not().
 
 # Notes: 
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
 # and makes use of an existing matching which is more apropos.
 # 2. has() must be before verbs().
+# 3. does_not() must be before verbs() also.
 
 def transforms(contents)
   eq(contents)
@@ -22,6 +25,7 @@ def transforms(contents)
   allow_any_instance_of(contents)
   receive(contents)
   has(contents)
+  does_not(contents)
   verbs(contents)
 end
 
@@ -55,6 +59,10 @@ end
 
 def has(contents)
   contents.gsub!(/( *)it([ \(])(['"])should have (.*?)(['"])([ \)])do/, "\\1it\\2\\3has \\4\\5\\6do")
+end
+
+def does_not(contents)
+  contents.gsub!(/( *)it([ \(])(['"])should not (.*?)(['"])([ \)])do/, "\\1it\\2\\3does not \\4\\5\\6do")
 end
 
 def verbs(contents)
