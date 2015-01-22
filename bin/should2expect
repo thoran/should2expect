@@ -2,13 +2,15 @@
 # should2expect
 
 # 20150122
-# 0.7.1
+# 0.7.2
 
 # Changes since 0.6:
 # 1. + verbs().
 # 2. + has().
 # 0/1
 # 2. + does_not().
+# 1/2
+# 3. Not all == --> eq... switched the order of execution to run to() and not_to() before a modified eq().
 
 # Notes: 
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -17,9 +19,9 @@
 # 3. does_not() must be before verbs() also.
 
 def transforms(contents)
-  eq(contents)
   to(contents)
   not_to(contents)
+  eq(contents)
   be_nil(contents)
   allow(contents)
   allow_any_instance_of(contents)
@@ -30,7 +32,7 @@ def transforms(contents)
 end
 
 def eq(contents)
-  contents.gsub!(/ *==( *)(.+)/, "\\1eq(\\2)")
+  contents.gsub!(/ *\.(should|to) ==( *)(.+)/, "\.to\\2eq(\\3)")
 end
 
 def to(contents)
