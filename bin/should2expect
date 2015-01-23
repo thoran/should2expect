@@ -2,7 +2,7 @@
 # should2expect
 
 # 20150123
-# 0.8.1
+# 0.8.2
 
 # Changes since 0.7:
 # 1. I forgot to carry the transform for =~ over since 0.2!
@@ -11,6 +11,9 @@
 # 0/1
 # 4. ~ allow_any_instance_of(), so that it works!
 # 5. Swapped order of allow_any_instance_of() and allow() also.
+# 1/2
+# 5. Be able to handle commented out specs.
+# 6. ~ eq() and match() to remove some extraneous characters.
 
 # Notes: 
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -33,19 +36,19 @@ def transforms(contents)
 end
 
 def eq(contents)
-  contents.gsub!(/ *\.(should|to) ==( *)(.+)/, "\.to\\2eq(\\3)")
+  contents.gsub!(/\.(should|to) ==( *)(.+)/, "\.to\\2eq(\\3)")
 end
 
 def match(contents)
-  contents.gsub!(/ *\.(should|to) =~( *)(.+)/, "\.to\\2match(\\3)")
+  contents.gsub!(/\.(should|to) =~( *)(.+)/, "\.to\\2match(\\3)")
 end
 
 def to(contents)
-  contents.gsub!(/( *)(.+)\.should( +)/, "\\1expect(\\2).to\\3")
+  contents.gsub!(/( *)(#* *)(.+)\.should( +)/, "\\1\\2expect(\\3).to\\4")
 end
 
 def not_to(contents)
-  contents.gsub!(/( *)(.+)\.should_not( +)/, "\\1expect(\\2).not_to\\3")
+  contents.gsub!(/( *)(#* *)(.+)\.should_not( +)/, "\\1\\2expect(\\3).not_to\\4")
 end
 
 def be_nil(contents)
@@ -53,27 +56,27 @@ def be_nil(contents)
 end
 
 def allow(contents)
-  contents.gsub!(/( *)(.+)\.stub\((.+?)\)/, "\\1allow(\\2).to receive(\\3)")
+  contents.gsub!(/( *)(#* *)(.+)\.stub\((.+?)\)/, "\\1\\2allow(\\3).to receive(\\4)")
 end
 
 def allow_any_instance_of(contents)
-  contents.gsub!(/( *)(.+)\.any_instance\.stub\((.+?)\)/, "\\1allow_any_instance_of(\\2).to receive(\\3)")
+  contents.gsub!(/( *)(#* *)(.+)\.any_instance\.stub\((.+?)\)/, "\\1\\2allow_any_instance_of(\\3).to receive(\\4)")
 end
 
 def receive(contents)
-  contents.gsub!(/( *)(.+)\.should_receive\((.+?)\)/, "\\1expect(\\2).to receive(\\3)")
+  contents.gsub!(/( *)(#* *)(.+)\.should_receive\((.+?)\)/, "\\1\\2expect(\\3).to receive(\\4)")
 end
 
 def has(contents)
-  contents.gsub!(/( *)it([ \(])(['"])should have (.*?)(['"])([ \)])do/, "\\1it\\2\\3has \\4\\5\\6do")
+  contents.gsub!(/( *)(#* *)it([ \(])(['"])should have (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4has \\5\\6\\7do")
 end
 
 def does_not(contents)
-  contents.gsub!(/( *)it([ \(])(['"])should not (.*?)(['"])([ \)])do/, "\\1it\\2\\3does not \\4\\5\\6do")
+  contents.gsub!(/( *)(#* *)it([ \(])(['"])should not (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4does not \\5\\6\\7do")
 end
 
 def verbs(contents)
-  contents.gsub!(/( *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/, "\\1it\\2\\3\\4s \\5\\6\\7do")
+  contents.gsub!(/( *)(#* *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4\\5s \\6\\7\\8do")
 end
 
 def input_filenames
