@@ -2,12 +2,15 @@
 # should2expect
 
 # 20150123
-# 0.8.0
+# 0.8.1
 
 # Changes since 0.7:
 # 1. I forgot to carry the transform for =~ over since 0.2!
 # 2. + input_filenames().
 # 3. + main().
+# 0/1
+# 4. ~ allow_any_instance_of(), so that it works!
+# 5. Swapped order of allow_any_instance_of() and allow() also.
 
 # Notes: 
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -21,8 +24,8 @@ def transforms(contents)
   eq(contents)
   match(contents)
   be_nil(contents)
-  allow(contents)
   allow_any_instance_of(contents)
+  allow(contents)
   receive(contents)
   has(contents)
   does_not(contents)
@@ -54,7 +57,7 @@ def allow(contents)
 end
 
 def allow_any_instance_of(contents)
-  contents.gsub!(/( *)(.+)\.any_instance_of\.stub\((.+?)\)/, "\\1allow_any_instance_of(\\2).to receive(\\3)")
+  contents.gsub!(/( *)(.+)\.any_instance\.stub\((.+?)\)/, "\\1allow_any_instance_of(\\2).to receive(\\3)")
 end
 
 def receive(contents)
