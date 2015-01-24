@@ -2,17 +2,20 @@
 # should2expect
 
 # 20150122
-# 0.3.0
+# 0.4.0
 
-# Changes since 0.2:
-# 1. Split the regexes up so that it can handle parts of the change required in a single assertion/example
-#   and that way it can handle those which are half way between the generally old style and the generally
-#   newer style like obj.should eq(obj).
+# Changes since 0.3:
+# 1. + be_nil()
+
+# Notes: 
+# 1. This is not a change to satisfy a deprecation, but rather a stylistic one
+# given that both are valid.
 
 def transforms(contents)
   eq(contents)
   to(contents)
   not_to(contents)
+  be_nil(contents)
 end
 
 def eq(contents)
@@ -25,6 +28,10 @@ end
 
 def not_to(contents)
   contents.gsub!(/( *)(.+)\.should_not( +)/, "\\1expect(\\2).not_to\\3")
+end
+
+def be_nil(contents)
+  contents.gsub!(/eq(nil)/, "be_nil")
 end
 
 input_filenames = (
