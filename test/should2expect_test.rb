@@ -346,6 +346,17 @@ describe "should2expect" do
       end
     end
 
+    context "it should not have's" do
+      let(:contents_before){'it "should not have some property" do'}
+      let(:contents_after){'it "does not have some property" do'}
+
+      it "transforms correctly" do
+        RspecFile.new(rspec_filename).transform
+        new_contents = File.read(rspec_filename)
+        expect(new_contents).to eq(contents_after)
+      end
+    end
+
     context "it should verb's" do
       let(:contents_before){'it "should verb with something" do'}
       let(:contents_after){'it "verbs with something" do'}
