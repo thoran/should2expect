@@ -2,7 +2,7 @@
 # should2expect
 
 # 20150125
-# 0.9.2
+# 0.9.3
 
 # Changes since 0.8:
 # 1. + RspecFile.
@@ -11,6 +11,8 @@
 # 1/2
 # 3. ~ RspecFile#eq, so that it works with not_to and so that it no longer attempts to match should, since that has been handled already at that point.
 # 4. ~ RspecFile#match, as per immediately above.
+# 2/3
+# 5. ~ Rspec#be_nil, so that it matches parentheses.
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -61,7 +63,7 @@ class RspecFile
   end
 
   def be_nil
-    contents.gsub!(/eq(nil)/, "be_nil")
+    contents.gsub!(/eq\(nil\)/, "be_nil")
   end
 
   def allow
