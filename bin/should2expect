@@ -2,7 +2,7 @@
 # should2expect
 
 # 20150125
-# 0.9.3
+# 0.9.4
 
 # Changes since 0.8:
 # 1. + RspecFile.
@@ -13,6 +13,8 @@
 # 4. ~ RspecFile#match, as per immediately above.
 # 2/3
 # 5. ~ Rspec#be_nil, so that it matches parentheses.
+# 3/4
+# 6. + Rspec#should_not_have.
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -76,6 +78,10 @@ class RspecFile
 
   def receive
     contents.gsub!(/( *)(#* *)(.+)\.should_receive\((.+?)\)/, "\\1\\2expect(\\3).to receive(\\4)")
+  end
+
+  def does_not_have
+    contents.gsub!(/( *)(#* *)it([ \(])(['"])should not have (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4does not have \\5\\6\\7do")
   end
 
   def has
