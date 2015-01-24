@@ -2,12 +2,15 @@
 # should2expect
 
 # 20150125
-# 0.9.1
+# 0.9.2
 
 # Changes since 0.8:
 # 1. + RspecFile.
 # 0/1
 # 2. Added self-run check, so that this is able to be under test and not actually do anything in the filesystem in $PWD.
+# 1/2
+# 3. ~ RspecFile#eq, so that it works with not_to and so that it no longer attempts to match should, since that has been handled already at that point.
+# 4. ~ RspecFile#match, as per immediately above.
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -50,11 +53,11 @@ class RspecFile
   end
 
   def eq
-    contents.gsub!(/\.(should|to) ==( *)(.+)/, "\.to\\2eq(\\3)")
+    contents.gsub!(/\.(to|not_to) ==( *)(.+)/, "\.\\1\\2eq(\\3)")
   end
 
   def match
-    contents.gsub!(/\.(should|to) =~( *)(.+)/, "\.to\\2match(\\3)")
+    contents.gsub!(/\.(to|not_to) =~( *)(.+)/, "\.\\1\\2match(\\3)")
   end
 
   def be_nil
