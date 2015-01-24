@@ -2,20 +2,23 @@
 # should2expect
 
 # 20150122
-# 0.4.0
+# 0.5.0
 
-# Changes since 0.3:
-# 1. + be_nil()
+# Changes since 0.4:
+# 1. + allow()
+# 2. + all_any_instance_of()
 
 # Notes: 
-# 1. This is not a change to satisfy a deprecation, but rather a stylistic one
-# given that both are valid.
+# 1. be_nil() does not satisfy a deprecation, but rather is stylistic
+# and makes use of an existing matching which is more apropos.
 
 def transforms(contents)
   eq(contents)
   to(contents)
   not_to(contents)
   be_nil(contents)
+  allow(contents)
+  allow_any_instance_of(contents)
 end
 
 def eq(contents)
@@ -32,6 +35,14 @@ end
 
 def be_nil(contents)
   contents.gsub!(/eq(nil)/, "be_nil")
+end
+
+def allow(contents)
+  contents.gsub!(/( *)(.+)\.stub\((.+)\)( +)/, "\\1allow(\\2).to receive(\\3)\\4")
+end
+
+def allow_any_instance_of(contents)
+  contents.gsub!(/( *)(.+)\.any_instance_of\.stub\((.+)\)( +)/, "\\1allow_any_instance_of(\\2).to receive(\\3)\\4")
 end
 
 input_filenames = (
