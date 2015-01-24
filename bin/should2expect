@@ -1,11 +1,13 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20150123, 25
-# 0.9.0
+# 20150125
+# 0.9.1
 
 # Changes since 0.8:
 # 1. + RspecFile.
+# 0/1
+# 2. Added self-run check, so that this is able to be under test and not actually do anything in the filesystem in $PWD.
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -114,4 +116,4 @@ def main
   end
 end
 
-main
+main if __FILE__ == $0
