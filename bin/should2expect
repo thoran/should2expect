@@ -2,10 +2,10 @@
 # should2expect
 
 # 20150121
-# 0.0.0
+# 0.1.0
 
-# Notes:
-# 1. It only does equals presently.
+# Changes:
+# 1. /=~/match/.
 
 input_filenames = (
   if !ARGV[0].nil?
@@ -20,5 +20,6 @@ input_filenames.reject!{|input_filename| File.directory?(input_filename)}
 input_filenames.each do |input_filename|
   contents = File.read(input_filename)
   new_contents = contents.gsub(/( +)(.+)\.should == (.*)$/, "\\1expect(\\2).to eq(\\3)")
+  new_contents = new_contents.gsub(/( +)(.+)\.should =~ (.*)$/, "\\1expect(\\2).to match(\\3)")
   File.write(input_filename, new_contents)
 end
