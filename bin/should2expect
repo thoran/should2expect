@@ -1,11 +1,31 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20150121
-# 0.2.0
+# 20150122
+# 0.3.0
 
-# Changes:
-# 1. Can handle should_not as well as should for == and =~.
+# Changes since 0.2:
+# 1. Split the regexes up so that it can handle parts of the change required in a single assertion/example
+#   and that way it can handle those which are half way between the generally old style and the generally
+#   newer style like obj.should eq(obj).
+
+def transforms(contents)
+  eq(contents)
+  to(contents)
+  not_to(contents)
+end
+
+def eq(contents)
+  contents.gsub!(/ *==( *)(.+)/, "\\1eq(\\2)")
+end
+
+def to(contents)
+  contents.gsub!(/( *)(.+)\.should( +)/, "\\1expect(\\2).to\\3")
+end
+
+def not_to(contents)
+  contents.gsub!(/( *)(.+)\.should_not( +)/, "\\1expect(\\2).not_to\\3")
+end
 
 input_filenames = (
   if !ARGV[0].nil?
@@ -19,9 +39,6 @@ input_filenames.reject!{|input_filename| File.directory?(input_filename)}
 
 input_filenames.each do |input_filename|
   contents = File.read(input_filename)
-  new_contents = contents.gsub(/( +)(.+)\.should == (.*)$/, "\\1expect(\\2).to eq(\\3)")
-  new_contents = new_contents.gsub(/( +)(.+)\.should =~ (.*)$/, "\\1expect(\\2).to match(\\3)")
-  new_contents = new_contents.gsub(/( +)(.+)\.should_not == (.*)$/, "\\1expect(\\2).not_to eq(\\3)")
-  new_contents = new_contents.gsub(/( +)(.+)\.should_not =~ (.*)$/, "\\1expect(\\2).not_to match(\\3)")
-  File.write(input_filename, new_contents)
+  transforms(contents)
+  File.write(input_filename, contents)
 end
