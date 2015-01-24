@@ -1,0 +1,24 @@
+#!/usr/bin/env ruby
+# should2expect
+
+# 20150121
+# 0.0.0
+
+# Notes:
+# 1. It only does equals presently.
+
+input_filenames = (
+  if !ARGV[0].nil?
+    Dir[ARGV[0]]
+  else
+    Dir['*']
+  end
+)
+
+input_filenames.reject!{|input_filename| File.directory?(input_filename)}
+
+input_filenames.each do |input_filename|
+  contents = File.read(input_filename)
+  new_contents = contents.gsub(/( +)(.+)\.should == (.*)$/, "\\1expect(\\2).to eq(\\3)")
+  File.write(input_filename, new_contents)
+end
