@@ -1,16 +1,13 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20150122
-# 0.7.2
+# 20150123
+# 0.8.0
 
-# Changes since 0.6:
-# 1. + verbs().
-# 2. + has().
-# 0/1
-# 2. + does_not().
-# 1/2
-# 3. Not all == --> eq... switched the order of execution to run to() and not_to() before a modified eq().
+# Changes since 0.7:
+# 1. I forgot to carry the transform for =~ over since 0.2!
+# 2. + input_filenames().
+# 3. + main().
 
 # Notes: 
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -22,6 +19,7 @@ def transforms(contents)
   to(contents)
   not_to(contents)
   eq(contents)
+  match(contents)
   be_nil(contents)
   allow(contents)
   allow_any_instance_of(contents)
@@ -33,6 +31,10 @@ end
 
 def eq(contents)
   contents.gsub!(/ *\.(should|to) ==( *)(.+)/, "\.to\\2eq(\\3)")
+end
+
+def match(contents)
+  contents.gsub!(/ *\.(should|to) =~( *)(.+)/, "\.to\\2match(\\3)")
 end
 
 def to(contents)
@@ -71,18 +73,30 @@ def verbs(contents)
   contents.gsub!(/( *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/, "\\1it\\2\\3\\4s \\5\\6\\7do")
 end
 
-input_filenames = (
-  if !ARGV[0].nil?
-    Dir[ARGV[0]]
-  else
-    Dir['*']
+def input_filenames
+  input_filenames = (
+    if ARGV[0]
+      if File.directory?(ARGV[0])
+        Dir["#{ARGV[0]}/**/*"]
+      else
+        Dir[ARGV[0]]
+      end
+    else
+      Dir['*']
+    end
+  )
+  input_filenames.reject! do |input_filename|
+    File.directory?(input_filename)
   end
-)
-
-input_filenames.reject!{|input_filename| File.directory?(input_filename)}
-
-input_filenames.each do |input_filename|
-  contents = File.read(input_filename)
-  transforms(contents)
-  File.write(input_filename, contents)
+  input_filenames
 end
+
+def main
+  input_filenames.each do |input_filename|
+    contents = File.read(input_filename)
+    transforms(contents)
+    File.write(input_filename, contents)
+  end
+end
+
+main
