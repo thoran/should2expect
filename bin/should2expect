@@ -1,96 +1,107 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20150123
-# 0.8.2
+# 20150123, 25
+# 0.9.0
 
-# Changes since 0.7:
-# 1. I forgot to carry the transform for =~ over since 0.2!
-# 2. + input_filenames().
-# 3. + main().
-# 0/1
-# 4. ~ allow_any_instance_of(), so that it works!
-# 5. Swapped order of allow_any_instance_of() and allow() also.
-# 1/2
-# 5. Be able to handle commented out specs.
-# 6. ~ eq() and match() to remove some extraneous characters.
+# Changes since 0.8:
+# 1. + RspecFile.
 
-# Notes: 
+# Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
 # and makes use of an existing matching which is more apropos.
 # 2. has() must be before verbs().
 # 3. does_not() must be before verbs() also.
 
-def transforms(contents)
-  to(contents)
-  not_to(contents)
-  eq(contents)
-  match(contents)
-  be_nil(contents)
-  allow_any_instance_of(contents)
-  allow(contents)
-  receive(contents)
-  has(contents)
-  does_not(contents)
-  verbs(contents)
-end
+class RspecFile
 
-def eq(contents)
-  contents.gsub!(/\.(should|to) ==( *)(.+)/, "\.to\\2eq(\\3)")
-end
+  attr_accessor :contents, :rspec_filename
 
-def match(contents)
-  contents.gsub!(/\.(should|to) =~( *)(.+)/, "\.to\\2match(\\3)")
-end
+  def initialize(rspec_filename)
+    @rspec_filename = rspec_filename
+    @contents = File.read(rspec_filename)
+  end
 
-def to(contents)
-  contents.gsub!(/( *)(#* *)(.+)\.should( +)/, "\\1\\2expect(\\3).to\\4")
-end
+  def transform
+    to
+    not_to
+    eq
+    match
+    be_nil
+    allow_any_instance_of
+    allow
+    receive
+    has
+    does_not
+    verbs
+    write
+  end
 
-def not_to(contents)
-  contents.gsub!(/( *)(#* *)(.+)\.should_not( +)/, "\\1\\2expect(\\3).not_to\\4")
-end
+  private
 
-def be_nil(contents)
-  contents.gsub!(/eq(nil)/, "be_nil")
-end
+  def to
+    contents.gsub!(/( *)(#* *)(.+)\.should( +)/, "\\1\\2expect(\\3).to\\4")
+  end
 
-def allow(contents)
-  contents.gsub!(/( *)(#* *)(.+)\.stub\((.+?)\)/, "\\1\\2allow(\\3).to receive(\\4)")
-end
+  def not_to
+    contents.gsub!(/( *)(#* *)(.+)\.should_not( +)/, "\\1\\2expect(\\3).not_to\\4")
+  end
 
-def allow_any_instance_of(contents)
-  contents.gsub!(/( *)(#* *)(.+)\.any_instance\.stub\((.+?)\)/, "\\1\\2allow_any_instance_of(\\3).to receive(\\4)")
-end
+  def eq
+    contents.gsub!(/\.(should|to) ==( *)(.+)/, "\.to\\2eq(\\3)")
+  end
 
-def receive(contents)
-  contents.gsub!(/( *)(#* *)(.+)\.should_receive\((.+?)\)/, "\\1\\2expect(\\3).to receive(\\4)")
-end
+  def match
+    contents.gsub!(/\.(should|to) =~( *)(.+)/, "\.to\\2match(\\3)")
+  end
 
-def has(contents)
-  contents.gsub!(/( *)(#* *)it([ \(])(['"])should have (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4has \\5\\6\\7do")
-end
+  def be_nil
+    contents.gsub!(/eq(nil)/, "be_nil")
+  end
 
-def does_not(contents)
-  contents.gsub!(/( *)(#* *)it([ \(])(['"])should not (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4does not \\5\\6\\7do")
-end
+  def allow
+    contents.gsub!(/( *)(#* *)(.+)\.stub\((.+?)\)/, "\\1\\2allow(\\3).to receive(\\4)")
+  end
 
-def verbs(contents)
-  contents.gsub!(/( *)(#* *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4\\5s \\6\\7\\8do")
+  def allow_any_instance_of
+    contents.gsub!(/( *)(#* *)(.+)\.any_instance\.stub\((.+?)\)/, "\\1\\2allow_any_instance_of(\\3).to receive(\\4)")
+  end
+
+  def receive
+    contents.gsub!(/( *)(#* *)(.+)\.should_receive\((.+?)\)/, "\\1\\2expect(\\3).to receive(\\4)")
+  end
+
+  def has
+    contents.gsub!(/( *)(#* *)it([ \(])(['"])should have (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4has \\5\\6\\7do")
+  end
+
+  def does_not
+    contents.gsub!(/( *)(#* *)it([ \(])(['"])should not (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4does not \\5\\6\\7do")
+  end
+
+  def verbs
+    contents.gsub!(/( *)(#* *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4\\5s \\6\\7\\8do")
+  end
+
+  def write
+    File.write(rspec_filename, contents)
+  end
+
 end
 
 def input_filenames
-  input_filenames = (
-    if ARGV[0]
-      if File.directory?(ARGV[0])
-        Dir["#{ARGV[0]}/**/*"]
-      else
-        Dir[ARGV[0]]
-      end
+  if ARGV[0]
+    if File.directory?(ARGV[0])
+      Dir["#{ARGV[0]}/**/*"]
     else
-      Dir['*']
+      Dir[ARGV[0]]
     end
-  )
+  else
+    Dir['*']
+  end
+end
+
+def rspec_filenames
   input_filenames.reject! do |input_filename|
     File.directory?(input_filename)
   end
@@ -98,10 +109,8 @@ def input_filenames
 end
 
 def main
-  input_filenames.each do |input_filename|
-    contents = File.read(input_filename)
-    transforms(contents)
-    File.write(input_filename, contents)
+  rspec_filenames.each do |rspec_filename|
+    RspecFile.new(rspec_filename).transform
   end
 end
 
