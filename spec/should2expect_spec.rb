@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
-# should2expect_test.rb
+# should2expect_spec.rb
 
-# 20150123, 24, 25
+# 20150125
 
 load '../bin/should2expect'
 require 'fileutils'
