@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # should2expect_spec.rb
 
-# 20150125
+# 20150127
 
 load '../bin/should2expect'
 require 'fileutils'
@@ -32,6 +32,50 @@ describe "should2expect" do
       context "expect(obj1).not_to eq(obj2)" do
         let(:contents_before){'expect(obj1).not_to eq(obj2)'}
         let(:contents_after){'expect(obj1).not_to eq(obj2)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "expect(obj1).to eql(obj2)" do
+        let(:contents_before){'expect(obj1).to eql(obj2)'}
+        let(:contents_after){'expect(obj1).to eql(obj2)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "expect(obj1).not_to eql(obj2)" do
+        let(:contents_before){'expect(obj1).not_to eql(obj2)'}
+        let(:contents_after){'expect(obj1).not_to eql(obj2)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "expect(obj1).to equal(obj2)" do
+        let(:contents_before){'expect(obj1).to equal(obj2)'}
+        let(:contents_after){'expect(obj1).to equal(obj2)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "expect(obj1).not_to equal(obj2)" do
+        let(:contents_before){'expect(obj1).not_to equal(obj2)'}
+        let(:contents_after){'expect(obj1).not_to equal(obj2)'}
 
         it "does 'nothing'" do
           RspecFile.new(rspec_filename).transform
@@ -160,6 +204,58 @@ describe "should2expect" do
 
     end
 
+    context "expectations with eql" do
+
+      context "obj1.should eql(obj2)" do
+        let(:contents_before){'obj1.should eql(obj2)'}
+        let(:contents_after){'expect(obj1).to eql(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.should_not eql(obj2)" do
+        let(:contents_before){'obj1.should_not eql(obj2)'}
+        let(:contents_after){'expect(obj1).not_to eql(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+    end
+
+    context "expectations with equal" do
+
+      context "obj1.should equal(obj2)" do
+        let(:contents_before){'obj1.should equal(obj2)'}
+        let(:contents_after){'expect(obj1).to equal(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.should_not equal(obj2)" do
+        let(:contents_before){'obj1.should_not equal(obj2)'}
+        let(:contents_after){'expect(obj1).not_to equal(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+    end
+
     context "expectations with =~" do
 
       context "obj1.should =~ obj2" do
@@ -215,6 +311,28 @@ describe "should2expect" do
 
     context "expectations with eq(nil)" do
       let(:contents_before){'expect(obj1).to eq(nil)'}
+      let(:contents_after){'expect(obj1).to be_nil'}
+
+      it "transforms correctly" do
+        RspecFile.new(rspec_filename).transform
+        new_contents = File.read(rspec_filename)
+        expect(new_contents).to eq(contents_after)
+      end
+    end
+
+    context "expectations with eql(nil)" do
+      let(:contents_before){'expect(obj1).to eql(nil)'}
+      let(:contents_after){'expect(obj1).to be_nil'}
+
+      it "transforms correctly" do
+        RspecFile.new(rspec_filename).transform
+        new_contents = File.read(rspec_filename)
+        expect(new_contents).to eq(contents_after)
+      end
+    end
+
+    context "expectations with equal(nil)" do
+      let(:contents_before){'expect(obj1).to equal(nil)'}
       let(:contents_after){'expect(obj1).to be_nil'}
 
       it "transforms correctly" do
