@@ -2,23 +2,10 @@
 # should2expect
 
 # 20150128
-# 0.9.6
+# 0.10.0
 
-# Changes since 0.8:
-# 1. + RspecFile.
-# 0/1
-# 2. Added self-run check, so that this is able to be under test and not actually do anything in the filesystem in $PWD.
-# 1/2
-# 3. ~ RspecFile#eq, so that it works with not_to and so that it no longer attempts to match should, since that has been handled already at that point.
-# 4. ~ RspecFile#match, as per immediately above.
-# 2/3
-# 5. ~ Rspec#be_nil, so that it matches parentheses.
-# 3/4
-# 6. + Rspec#should_not_have.
-# 4/5
-# 7. Can now handle eql and equal as well as eq.
-# 5/6
-# 8. ~ rspec_filenames(), so that it actually does the reject now!
+# Changes since 0.9:
+# 1. Can now handle expectations of the form obj1.stub(method: obj2).
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -41,7 +28,9 @@ class RspecFile
     eq
     match
     be_nil
+    allow_any_instance_of_from_stub_containing_return_value
     allow_any_instance_of
+    allow_from_stub_containing_return_value
     allow
     receive
     has
@@ -74,8 +63,16 @@ class RspecFile
     contents.gsub!(/equal\(nil\)/, "be_nil")
   end
 
+  def allow_from_stub_containing_return_value
+    contents.gsub!(/( *)(#* *)(.+)\.stub\((.+?): *(.+?)\)/, "\\1\\2allow(\\3).to receive(:\\4).and_return(\\5)")
+  end
+
   def allow
     contents.gsub!(/( *)(#* *)(.+)\.stub\((.+?)\)/, "\\1\\2allow(\\3).to receive(\\4)")
+  end
+
+  def allow_any_instance_of_from_stub_containing_return_value
+    contents.gsub!(/( *)(#* *)(.+)\.any_instance\.stub\((.+?): *(.+?)\)/, "\\1\\2allow_any_instance_of(\\3).to receive(:\\4).and_return(\\5)")
   end
 
   def allow_any_instance_of
