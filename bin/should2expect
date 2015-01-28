@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20150127
-# 0.9.5
+# 20150128
+# 0.9.6
 
 # Changes since 0.8:
 # 1. + RspecFile.
@@ -17,6 +17,8 @@
 # 6. + Rspec#should_not_have.
 # 4/5
 # 7. Can now handle eql and equal as well as eq.
+# 5/6
+# 8. ~ rspec_filenames(), so that it actually does the reject now!
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -119,10 +121,9 @@ def input_filenames
 end
 
 def rspec_filenames
-  input_filenames.reject! do |input_filename|
+  input_filenames.reject do |input_filename|
     File.directory?(input_filename)
   end
-  input_filenames
 end
 
 def main
