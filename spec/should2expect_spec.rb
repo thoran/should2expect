@@ -414,6 +414,17 @@ describe "should2expect" do
         end
       end
 
+      context "obj1.stub(method1: obj2)" do
+        let(:contents_before){'obj1.stub(method1: obj2)'}
+        let(:contents_after){'allow(obj1).to receive(:method1).and_return(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
     end
 
     context "any_instance's" do
