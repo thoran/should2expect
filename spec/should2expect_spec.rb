@@ -1,7 +1,7 @@
 #!/usr/bin/env ruby
 # should2expect_spec.rb
 
-# 20150127
+# 20150129
 
 load '../bin/should2expect'
 require 'fileutils'
@@ -165,8 +165,30 @@ describe "should2expect" do
         end
       end
 
+      context "obj1.should==obj2" do
+        let(:contents_before){'obj1.should==obj2'}
+        let(:contents_after){'expect(obj1).to eq(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
       context "obj1.should_not == obj2" do
         let(:contents_before){'obj1.should_not == obj2'}
+        let(:contents_after){'expect(obj1).not_to eq(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.should_not==obj2" do
+        let(:contents_before){'obj1.should_not==obj2'}
         let(:contents_after){'expect(obj1).not_to eq(obj2)'}
 
         it "transforms correctly" do
@@ -269,9 +291,30 @@ describe "should2expect" do
         end
       end
 
+      context "obj1.should=~obj2" do
+        let(:contents_before){'obj1.should=~obj2'}
+        let(:contents_after){'expect(obj1).to match(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
 
       context "obj1.should_not =~ obj2" do
         let(:contents_before){'obj1.should_not =~ obj2'}
+        let(:contents_after){'expect(obj1).not_to match(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.should_not=~obj2" do
+        let(:contents_before){'obj1.should_not=~obj2'}
         let(:contents_after){'expect(obj1).not_to match(obj2)'}
 
         it "transforms correctly" do
@@ -369,6 +412,43 @@ describe "should2expect" do
       context "obj1.should_receive(:method1).with(obj2).and_return(obj3)" do
         let(:contents_before){'obj1.should_receive(:method1).with(obj2).and_return(obj3)'}
         let(:contents_after){'expect(obj1).to receive(:method1).with(obj2).and_return(obj3)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+    end
+
+    context "expectations with should_not_receive" do
+
+      context "obj1.should_not_receive(:method1)" do
+        let(:contents_before){'obj1.should_not_receive(:method1)'}
+        let(:contents_after){'expect(obj1).not_to receive(:method1)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.should_not_receive(:method1).and_return(obj2)" do
+        let(:contents_before){'obj1.should_not_receive(:method1).and_return(obj2)'}
+        let(:contents_after){'expect(obj1).not_to receive(:method1).and_return(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.should_not_receive(:method1).with(obj2).and_return(obj3)" do
+        let(:contents_before){'obj1.should_not_receive(:method1).with(obj2).and_return(obj3)'}
+        let(:contents_after){'expect(obj1).not_to receive(:method1).with(obj2).and_return(obj3)'}
 
         it "transforms correctly" do
           RspecFile.new(rspec_filename).transform
