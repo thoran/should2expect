@@ -128,6 +128,28 @@ describe "should2expect" do
         end
       end
 
+      context "expect(obj1).to receive(:method1).and_return(obj2)" do
+        let(:contents_before){'expect(obj1).to receive(:method1).and_return(obj2)'}
+        let(:contents_after){'expect(obj1).to receive(:method1).and_return(obj2)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "expect_any_instance_of(obj1).to receive(:method1).with(obj2).and_return(obj3)" do
+        let(:contents_before){'expect_any_instance_of(obj1).to receive(:method1).with(obj2).and_return(obj3)'}
+        let(:contents_after){'expect_any_instance_of(obj1).to receive(:method1).with(obj2).and_return(obj3)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
       context "allow(obj1).to receive(:method1)" do
         let(:contents_before){'allow(obj1).to receive(:method1)'}
         let(:contents_after){'allow(obj1).to receive(:method1)'}
@@ -142,6 +164,28 @@ describe "should2expect" do
       context "allow_any_instance_of(obj1).to receive(:method1)" do
         let(:contents_before){'allow_any_instance_of(obj1).to receive(:method1)'}
         let(:contents_after){'allow_any_instance_of(obj1).to receive(:method1)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "allow_any_instance_of(obj1).to receive(:method1).with(obj2)" do
+        let(:contents_before){'allow_any_instance_of(obj1).to receive(:method1).with(obj2)'}
+        let(:contents_after){'allow_any_instance_of(obj1).to receive(:method1).with(obj2)'}
+
+        it "does 'nothing'" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "allow_any_instance_of(obj1).to receive(:method1).with(obj2).and_return(obj3)" do
+        let(:contents_before){'allow_any_instance_of(obj1).to receive(:method1).with(obj2).and_return(obj3)'}
+        let(:contents_after){'allow_any_instance_of(obj1).to receive(:method1).with(obj2).and_return(obj3)'}
 
         it "does 'nothing'" do
           RspecFile.new(rspec_filename).transform
