@@ -2,13 +2,10 @@
 # should2expect
 
 # 20150129
-# 0.11.0
+# 0.12.0
 
-# Changes since 0.9:
-# 1. ~ eq(), so that 0 or more spaces can exist in front of ==.
-# 2. ~ match(), so that 0 or more spaces can exist in front of =~.
-# 3. + not_to_receive, since this couldn't handle should_not_receive till now.
-# 4. Rearranged everything so that the order of execution matches the order of presentation of the methods.
+# Changes since 0.11:
+# 1. + RspecFile#expect_any_instance_of, so as it can handle .any_instance.should_receive examples.
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -26,6 +23,7 @@ class RspecFile
   end
 
   def transform
+    expect_any_instance_of
     not_to_receive
     receive
     not_to
@@ -45,6 +43,10 @@ class RspecFile
   end
 
   private
+
+  def expect_any_instance_of
+    contents.gsub!(/( *)(#* *)(.+)\.any_instance\.should_receive\((.+?)\)/, "\\1\\2expect_any_instance_of(\\3).to receive(\\4)")
+  end
 
   def not_to_receive
     contents.gsub!(/( *)(#* *)(.+)\.should_not_receive\((.+?)\)/, "\\1\\2expect(\\3).not_to receive(\\4)")
