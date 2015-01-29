@@ -544,6 +544,42 @@ describe "should2expect" do
 
     end
 
+    context "any instance should receive's" do
+
+      context "obj1.any_instance.should_receive(:method1)" do
+        let(:contents_before){'obj1.any_instance.should_receive(:method1)'}
+        let(:contents_after){'expect_any_instance_of(obj1).to receive(:method1)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.any_instance.should_receive(:method1).and_return(obj2)" do
+        let(:contents_before){'obj1.any_instance.should_receive(:method1).and_return(obj2)'}
+        let(:contents_after){'expect_any_instance_of(obj1).to receive(:method1).and_return(obj2)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+
+      context "obj1.any_instance.should_receive(:method1).with(obj2)and_return(obj3)" do
+        let(:contents_before){'obj1.any_instance.should_receive(:method1).with(obj2).and_return(obj3)'}
+        let(:contents_after){'expect_any_instance_of(obj1).to receive(:method1).with(obj2).and_return(obj3)'}
+
+        it "transforms correctly" do
+          RspecFile.new(rspec_filename).transform
+          new_contents = File.read(rspec_filename)
+          expect(new_contents).to eq(contents_after)
+        end
+      end
+    end
+
     context "it should have's" do
       let(:contents_before){'it "should have some property" do'}
       let(:contents_after){'it "has some property" do'}
