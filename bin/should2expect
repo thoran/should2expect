@@ -2,10 +2,12 @@
 # should2expect
 
 # 20150129
-# 0.12.0
+# 0.12.1
 
 # Changes since 0.11:
 # 1. + RspecFile#expect_any_instance_of, so as it can handle .any_instance.should_receive examples.
+# 0/1
+# 2. Added further examples in the section "expectations with nothing to do".
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
