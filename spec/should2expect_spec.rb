@@ -527,7 +527,7 @@ describe "should2expect" do
         end
       end
 
-      context "obj1.stub(:method1).with(obj2).with(obj2).and_return(obj3)" do
+      context "obj1.stub(:method1).with(obj2).and_return(obj3)" do
         let(:contents_before){'obj1.stub(:method1).with(obj2).and_return(obj3)'}
         let(:contents_after){'allow(obj1).to receive(:method1).with(obj2).and_return(obj3)'}
 
