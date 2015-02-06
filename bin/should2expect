@@ -1,13 +1,12 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20150129
-# 0.12.1
+# 20150206
+# 0.13.0
 
-# Changes since 0.11:
-# 1. + RspecFile#expect_any_instance_of, so as it can handle .any_instance.should_receive examples.
-# 0/1
-# 2. Added further examples in the section "expectations with nothing to do".
+# Changes since 0.12:
+# 1. When pointing this at a directory it selects only files ending in .rb now,
+#   so one does not need to be as careful with its operation.
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -121,12 +120,12 @@ end
 def input_filenames
   if ARGV[0]
     if File.directory?(ARGV[0])
-      Dir["#{ARGV[0]}/**/*"]
+      Dir["#{ARGV[0]}/**/*.rb"]
     else
       Dir[ARGV[0]]
     end
   else
-    Dir['*']
+    Dir['*.rb']
   end
 end
 
