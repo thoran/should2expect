@@ -7,7 +7,7 @@
 # Changes since 0.12:
 # 1. When pointing this at a directory it selects only files ending in .rb now,
 #   so one does not need to be as careful with its operation.
-# 2. Allowing the specs to work from any directory.
+# 2. Allowed the specs to work from any directory.
 # 3. Some formatting in the spec file.
 
 # Notes:
