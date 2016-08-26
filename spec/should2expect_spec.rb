@@ -1,9 +1,7 @@
 #!/usr/bin/env ruby
 # should2expect_spec.rb
 
-# 20150129
-
-load '../bin/should2expect'
+load File.expand_path(File.join('..', '..', 'bin', 'should2expect'), __FILE__)
 require 'fileutils'
 require 'rspec'
 
@@ -17,7 +15,6 @@ describe "should2expect" do
     end
 
     context "expectations with nothing to do" do
-
       context "expect(obj1).to eq(obj2)" do
         let(:contents_before){'expect(obj1).to eq(obj2)'}
         let(:contents_after){'expect(obj1).to eq(obj2)'}
@@ -193,11 +190,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with ==" do
-
       context "obj1.should == obj2" do
         let(:contents_before){'obj1.should == obj2'}
         let(:contents_after){'expect(obj1).to eq(obj2)'}
@@ -241,11 +236,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with eq" do
-
       context "obj1.should eq(obj2)" do
         let(:contents_before){'obj1.should eq(obj2)'}
         let(:contents_after){'expect(obj1).to eq(obj2)'}
@@ -267,11 +260,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with eql" do
-
       context "obj1.should eql(obj2)" do
         let(:contents_before){'obj1.should eql(obj2)'}
         let(:contents_after){'expect(obj1).to eql(obj2)'}
@@ -293,11 +284,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with equal" do
-
       context "obj1.should equal(obj2)" do
         let(:contents_before){'obj1.should equal(obj2)'}
         let(:contents_after){'expect(obj1).to equal(obj2)'}
@@ -319,11 +308,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with =~" do
-
       context "obj1.should =~ obj2" do
         let(:contents_before){'obj1.should =~ obj2'}
         let(:contents_after){'expect(obj1).to match(obj2)'}
@@ -367,11 +354,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with match" do
-
       context "obj1.should match(obj2)" do
         let(:contents_before){'obj1.should match(obj2)'}
         let(:contents_after){'expect(obj1).to match(obj2)'}
@@ -393,7 +378,6 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with eq(nil)" do
@@ -430,7 +414,6 @@ describe "should2expect" do
     end
 
     context "expectations with should_receive" do
-
       context "obj1.should_receive(:method1)" do
         let(:contents_before){'obj1.should_receive(:method1)'}
         let(:contents_after){'expect(obj1).to receive(:method1)'}
@@ -463,11 +446,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "expectations with should_not_receive" do
-
       context "obj1.should_not_receive(:method1)" do
         let(:contents_before){'obj1.should_not_receive(:method1)'}
         let(:contents_after){'expect(obj1).not_to receive(:method1)'}
@@ -500,11 +481,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "stub's" do
-
       context "obj1.stub(:method1)" do
         let(:contents_before){'obj1.stub(:method1)'}
         let(:contents_after){'allow(obj1).to receive(:method1)'}
@@ -548,11 +527,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "any_instance's" do
-
       context "obj1.any_instance.stub(:method1)" do
         let(:contents_before){'obj1.any_instance.stub(:method1)'}
         let(:contents_after){'allow_any_instance_of(obj1).to receive(:method1)'}
@@ -585,11 +562,9 @@ describe "should2expect" do
           expect(new_contents).to eq(contents_after)
         end
       end
-
     end
 
     context "any instance should receive's" do
-
       context "obj1.any_instance.should_receive(:method1)" do
         let(:contents_before){'obj1.any_instance.should_receive(:method1)'}
         let(:contents_after){'expect_any_instance_of(obj1).to receive(:method1)'}

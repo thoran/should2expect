@@ -1,12 +1,14 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20150206
-# 0.13.0
+# 20160826
+# 0.13.1
 
 # Changes since 0.12:
 # 1. When pointing this at a directory it selects only files ending in .rb now,
 #   so one does not need to be as careful with its operation.
+# 2. Allowing the specs to work from any directory.
+# 3. Some formatting in the spec file.
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
@@ -16,7 +18,8 @@
 
 class RspecFile
 
-  attr_accessor :contents, :rspec_filename
+  attr_accessor :contents
+  attr_accessor :rspec_filename
 
   def initialize(rspec_filename)
     @rspec_filename = rspec_filename
