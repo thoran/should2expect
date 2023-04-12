@@ -643,6 +643,28 @@ describe "should2expect" do
       end
     end
 
+    context "it should notify's" do
+      let(:contents_before){'it "should notify something" do'}
+      let(:contents_after){'it "notifies something" do'}
+
+      it "transforms correctly" do
+        RspecFile.new(rspec_filename).transform
+        new_contents = File.read(rspec_filename)
+        expect(new_contents).to eq(contents_after)
+      end
+    end
+
+    context "it should not notify's" do
+      let(:contents_before){'it "should not notify something" do'}
+      let(:contents_after){'it "does not notify something" do'}
+
+      it "transforms correctly" do
+        RspecFile.new(rspec_filename).transform
+        new_contents = File.read(rspec_filename)
+        expect(new_contents).to eq(contents_after)
+      end
+    end
+
     after do
       FileUtils.rm_f(rspec_filename)
     end

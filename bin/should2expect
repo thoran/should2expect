@@ -1,18 +1,18 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20160826
-# 0.13.1
+# 20230412
+# 0.14.0
 
-# Changes since 0.12:
-# 1. When pointing this at a directory it selects only files ending in .rb now,
-#   so one does not need to be as careful with its operation.
-# 2. Allowed the specs to work from any directory.
-# 3. Some formatting in the spec file.
+# Changes since 0.13:
+# 0: Handle verbs ending in y.
+# 1. - RspecFile#verbs
+# 2. + RspecFile#verbs_ending_in_y
+# 3. + RspecFile#verbs_not_ending_in_y
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
-# and makes use of an existing matching which is more apropos.
+#   and makes use of an existing matching which is more apropos.
 # 2. has() must be before verbs().
 # 3. does_not() must be before verbs() also.
 
@@ -42,7 +42,8 @@ class RspecFile
     does_not_have
     has
     does_not
-    verbs
+    verbs_ending_in_y
+    verbs_not_ending_in_y
     write
   end
 
@@ -110,8 +111,14 @@ class RspecFile
     contents.gsub!(/( *)(#* *)it([ \(])(['"])should not (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4does not \\5\\6\\7do")
   end
 
-  def verbs
-    contents.gsub!(/( *)(#* *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/, "\\1\\2it\\3\\4\\5s \\6\\7\\8do")
+  def verbs_ending_in_y
+    regex = /( *)(#* *)it([ \(])(['"])should (\w+)y (.*?)(['"])([ \)])do/
+    contents.gsub!(regex, "\\1\\2it\\3\\4\\5ies \\6\\7\\8do")
+  end
+
+  def verbs_not_ending_in_y
+    regex = /( *)(#* *)it([ \(])(['"])should (\w+) (.*?)(['"])([ \)])do/
+    contents.gsub!(regex, "\\1\\2it\\3\\4\\5s \\6\\7\\8do")
   end
 
   def write
