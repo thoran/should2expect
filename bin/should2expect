@@ -1,14 +1,8 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20230412
-# 0.14.0
-
-# Changes since 0.13:
-# 0: Handle verbs ending in y.
-# 1. - RspecFile#verbs
-# 2. + RspecFile#verbs_ending_in_y
-# 3. + RspecFile#verbs_not_ending_in_y
+# 20260807
+# 0.15.0
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
