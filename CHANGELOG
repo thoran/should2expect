@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 20260820
+
+0.15.1: ~ .gitignore: + current default contents
+
+1. ~ .gitignore: + current default contents
+
+
 ## 20260807
 
 0.15.0: Add a CHANGELOG in the form changelogger writes, and retire the Changes section from the script header.

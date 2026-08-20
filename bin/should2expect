@@ -1,8 +1,8 @@
 #!/usr/bin/env ruby
 # should2expect
 
-# 20260807
-# 0.15.0
+# 20260820
+# 0.15.1
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic
