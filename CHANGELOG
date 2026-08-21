@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 20260821
+
+0.16.0: + README.md
+
+1. + README.md. Description, Installation, Usage, What it converts, Notes and Contributing, following the shape of the READMEs the other programs in the tap carry.
+2. The conversion table is the record of what the eighteen transforms do, each row run through the script rather than read off its regular expressions.
+3. Two things the script does not say anywhere are written down: without an argument only the current directory's *.rb files are read and not the tree below, and a stub written with a hashrocket converts without the and_return its new-style form gets, for which dehashrocketify run first is the answer.
+
+
 ## 20260820
 
 0.15.1: ~ .gitignore: + current default contents
