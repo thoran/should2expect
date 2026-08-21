@@ -2,7 +2,7 @@
 # should2expect
 
 # 20260821
-# 0.16.0
+# 0.16.1
 
 # Notes:
 # 1. be_nil() does not satisfy a deprecation, but rather is stylistic

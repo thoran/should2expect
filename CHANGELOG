@@ -2,6 +2,15 @@
 
 ## 20260821
 
+0.16.1: + LICENSE, and the README section naming it.
+
+1. + LICENSE: the MIT text, copyright 2015-2026 thoran. The year is that of the first commit.
+2. + README.md: a License section, saying MIT, last as the four repositories here which already had one have it.
+3. ~ bin/should2expect: /0.16.0/0.16.1/, and the date.
+
+
+## 20260821
+
 0.16.0: + README.md
 
 1. + README.md. Description, Installation, Usage, What it converts, Notes and Contributing, following the shape of the READMEs the other programs in the tap carry.
